@@ -1,0 +1,192 @@
+body {
+    background-color: #121213;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+#hint-box {
+    background-color: #1a1a1c;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #3a3a3c;
+    text-align: center;
+}
+.Endless {
+  /* Positioning: Pins it to the top-right corner with some breathing room */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000; /* Ensures it stays above the search dropdown and guess feeds */
+
+  /* Colors and Typography */
+  background-color: #2ecc71;       /* Vibrant, modern green background */
+  color: #121213;                  /* Dark text color for high contrast against green */
+  font-size: 18px;                 /* Bigger text size */
+  font-weight: bold;               /* Bold text to stand out */
+  font-family: sans-serif;         /* Clean font style */
+  
+  /* Sizing and Spacing */
+  padding: 14px 28px;              /* Generous spacing making the button physically bigger */
+  border: none;                    /* Removes default browser border */
+  border-radius: 8px;              /* Smooth, modern rounded corners */
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3); /* Soft green glow glow for prominence */
+  
+  /* Interactivity */
+  cursor: pointer;                 /* Changes mouse to a hand icon on hover */
+  transition: all 0.2s ease;       /* Animates hover transformations smoothly */
+}
+
+/* Hover Effect: Changes color and slightly enlarges when mouse moves over it */
+.Endless:hover {
+  background-color: #27ae60;       /* Darker green on hover */
+  transform: scale(1.05);          /* Slightly bigger on hover */
+}
+
+/* Click Effect: Brief press down when clicked */
+.Endless:active {
+  transform: scale(0.98);          /* Simulates a physical button press depth */
+}
+
+/* Responsive adjustment for mobile screens so it doesn't overlap headers */
+@media (max-width: 600px) {
+  #Endless {
+    position: static;              /* Drops back into normal flow on tiny screens */
+    margin-bottom: 20px;
+    width: 100%;                   /* Takes full width on mobile for easier tapping */
+    box-sizing: border-box;
+  }
+}
+
+/* Responsive adjustment for mobile screens so it doesn't overlap headers */
+@media (max-width: 600px) {
+  #Endless {
+    position: static;              /* Drops back into normal flow on tiny screens */
+    margin-bottom: 20px;
+    width: 100%;                   /* Takes full width on mobile for easier tapping */
+    box-sizing: border-box;
+  }
+}
+
+
+/* Search Dropdown Layout */
+#search-container {
+    position: relative;
+    width: 350px;
+    max-width: 90vw;
+    margin-bottom: 30px;
+}
+
+#movie-search {
+    width: 100%;
+    padding: 12px;
+    background-color: #272729;
+    border: 2px solid #3a3a3c;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+#dropdown-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #272729;
+    border: 1px solid #3a3a3c;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    border-radius: 0 0 6px 6px;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #3a3a3c;
+}
+
+.dropdown-item:hover {
+    background-color: #3a3a3c;
+}
+
+/* Guess Feed (Rows of guessed movies) */
+#guesses-feed {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.guess-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    animation: slideIn 0.3s ease-out;
+}
+
+.info-block {
+    flex: 1;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #3a3a3c;
+}
+
+.poster-block {
+    width: 50px;
+    height: 70px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    border: 1px solid #3a3a3c;
+}
+
+/* Colors for Match Criteria */
+.correct { background-color: #538d4e; border-color: #538d4e; }
+.present { background-color: #b59f3b; border-color: #b59f3b; }
+.absent  { background-color: #3a3a3c; border-color: #3a3a3c; }
+
+@keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Credits Footer */
+#credits {
+    margin-top: auto;
+    padding-top: 30px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid #3a3a3c;
+    width: 100%;
+}
+
+#credits p {
+    margin: 0;
+}
+
+#credits a {
+    color: #b59f3b;
+    text-decoration: none;
+}
+
+#credits a:hover {
+    text-decoration: underline;
+}
