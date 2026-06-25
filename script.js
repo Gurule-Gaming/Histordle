@@ -1,20 +1,23 @@
-// 1. Setup Historical Data Pool
+// 1. Expanded History Event Pool
 const HISTORICAL_EVENTS = [
-    { id: 1, title: "FALL OF ROME", year: 476, category: "Ancient", keyFigure: "Romulus Augustulus" },
-    { id: 2, title: "MAGNA CARTA", year: 1215, category: "Medieval", keyFigure: "King John" },
-    { id: 3, title: "FRENCH REVOLUTION", year: 1789, category: "Modern", keyFigure: "Louis XVI" },
-    { id: 4, title: "MOON LANDING", year: 1969, category: "Modern", keyFigure: "Neil Armstrong" },
-    { id: 5, title: "PRINTING PRESS INVENTED", year: 1440, category: "Medieval", keyFigure: "Johannes Gutenberg" }
+    { id: 1, title: "FALL OF ROME", year: 476, category: "Ancient", keyFigure: "Romulus Augustulus", clue: "The collapse of this major empire in 476 A.D. marked the end of ancient dominance." },
+    { id: 2, title: "MAGNA CARTA", year: 1215, category: "Medieval", keyFigure: "King John", clue: "A foundational document signed in 1215 that limited royal power." },
+    { id: 3, title: "FRENCH REVOLUTION", year: 1789, category: "Modern", keyFigure: "Louis XVI", clue: "A massive political upheaval beginning in 1789 that ended the absolute monarchy." },
+    { id: 4, title: "MOON LANDING", year: 1969, category: "Modern", keyFigure: "Neil Armstrong", clue: "The historic 1969 mission that put the first human on another celestial body." },
+    { id: 5, title: "PRINTING PRESS INVENTED", year: 1440, category: "Medieval", keyFigure: "Johannes Gutenberg", clue: "The 1440 innovation that revolutionized how knowledge was spread across the globe." },
+    { id: 6, title: "BATTLE OF WATERLOO", year: 1815, category: "Modern", keyFigure: "Napoleon Bonaparte", clue: "The decisive 1815 battle that brought an end to an era of European conquest." },
+    { id: 7, title: "SIGNING OF THE DECLARATION OF INDEPENDENCE", year: 1776, category: "Modern", keyFigure: "Thomas Jefferson", clue: "The 1776 act that solidified the formation of a new sovereign nation." }
 ];
 
 let SECRET_EVENT = null;
+let IS_ENDLESS = false;
 let guessCount = 0;
 
 const searchInput = document.getElementById("movie-search");
 const dropdown = document.getElementById("dropdown-results");
 const feed = document.getElementById("guesses-feed");
+const endlessBtn = document.getElementById("endless-btn");
 
-// 2. Initialize Game
 function initGame() {
     setDailyEvent();
 }
@@ -24,26 +27,48 @@ function updateHintText(text) {
     if (hintElement) hintElement.innerText = text;
 }
 
-function setDailyEvent() {
-    guessCount = 0;
-    // Pick based on date seed
-    const today = new Date();
-    const seed = today.getUTCFullYear() * 10000 + (today.getUTCMonth() + 1) * 100 + today.getUTCDate();
-    SECRET_EVENT = HISTORICAL_EVENTS[seed % HISTORICAL_EVENTS.length];
-    
-    updateHintText(`Clue: Guess the historical event! (Category: ${SECRET_EVENT.category})`);
-}
-
 function triggerProgressiveHint() {
     guessCount++;
+    const mode = IS_ENDLESS ? "Endless" : "Daily";
     switch(guessCount) {
-        case 1: updateHintText(`Hint: Key Figure involved: ${SECRET_EVENT.keyFigure}.`); break;
-        case 2: updateHintText(`Hint: Occurred in the ${Math.floor(SECRET_EVENT.year/100) * 100}s.`); break;
+        case 1: updateHintText(`${mode} Hint: Key historical figure: ${SECRET_EVENT.keyFigure}.`); break;
+        case 2: updateHintText(`${mode} Hint: This event took place during the ${Math.floor(SECRET_EVENT.year/100) * 100}s.`); break;
+        case 3: updateHintText(`${mode} Hint: Full context: ${SECRET_EVENT.clue}`); break;
         default: break;
     }
 }
 
-// 4. Handle Input (Search through static array)
+function setDailyEvent() {
+    IS_ENDLESS = false;
+    guessCount = 0;
+    const today = new Date();
+    const seed = today.getUTCFullYear() * 10000 + (today.getUTCMonth() + 1) * 100 + today.getUTCDate();
+    SECRET_EVENT = HISTORICAL_EVENTS[seed % HISTORICAL_EVENTS.length];
+    updateHintText(`Daily History Challenge: Guess the event! (Category: ${SECRET_EVENT.category})`);
+}
+
+function setEndlessEvent() {
+    IS_ENDLESS = true;
+    guessCount = 0;
+    feed.innerHTML = "";
+    SECRET_EVENT = HISTORICAL_EVENTS[Math.floor(Math.random() * HISTORICAL_EVENTS.length)];
+    updateHintText(`Endless Mode: Guess the historical event! (Category: ${SECRET_EVENT.category})`);
+}
+
+// Endless Button Listener
+if (endlessBtn) {
+    endlessBtn.addEventListener("click", () => {
+        if (!IS_ENDLESS) {
+            setEndlessEvent();
+            endlessBtn.innerText = "Back to Daily Mode 📅";
+        } else {
+            setDailyEvent();
+            endlessBtn.innerText = "Endless Mode 🎲";
+        }
+    });
+}
+
+// Search Logic
 if (searchInput) {
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.toLowerCase();
@@ -62,15 +87,12 @@ if (searchInput) {
     });
 }
 
-// 5. Submit Guess Logic
 function submitGuess(guessedEvent) {
     searchInput.value = "";
     dropdown.innerHTML = "";
-
     let row = document.createElement("div");
     row.className = "guess-row";
 
-    // Comparison Logic
     row.appendChild(createInfoBlock(guessedEvent.title, guessedEvent.title === SECRET_EVENT.title));
     
     let yearDisplay = guessedEvent.year + (guessedEvent.year < SECRET_EVENT.year ? " ⬆️" : guessedEvent.year > SECRET_EVENT.year ? " ⬇️" : "");
@@ -82,7 +104,7 @@ function submitGuess(guessedEvent) {
     feed.insertBefore(row, feed.firstChild);
 
     if (guessedEvent.title === SECRET_EVENT.title) {
-        alert("Victory! You uncovered the history!");
+        alert("Correct! You have mastered history!");
     } else {
         triggerProgressiveHint();
     }
