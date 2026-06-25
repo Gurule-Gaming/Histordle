@@ -1,12 +1,12 @@
 // 1. Expanded History Event Pool
 const HISTORICAL_EVENTS = [
-    { id: 1, title: "FALL OF ROME", year: 476, category: "Ancient", keyFigure: "Romulus Augustulus", clue: "The collapse of this major empire in 476 A.D. marked the end of ancient dominance." },
-    { id: 2, title: "MAGNA CARTA", year: 1215, category: "Medieval", keyFigure: "King John", clue: "A foundational document signed in 1215 that limited royal power." },
-    { id: 3, title: "FRENCH REVOLUTION", year: 1789, category: "Modern", keyFigure: "Louis XVI", clue: "A massive political upheaval beginning in 1789 that ended the absolute monarchy." },
-    { id: 4, title: "MOON LANDING", year: 1969, category: "Modern", keyFigure: "Neil Armstrong", clue: "The historic 1969 mission that put the first human on another celestial body." },
-    { id: 5, title: "PRINTING PRESS INVENTED", year: 1440, category: "Medieval", keyFigure: "Johannes Gutenberg", clue: "The 1440 innovation that revolutionized how knowledge was spread across the globe." },
-    { id: 6, title: "BATTLE OF WATERLOO", year: 1815, category: "Modern", keyFigure: "Napoleon Bonaparte", clue: "The decisive 1815 battle that brought an end to an era of European conquest." },
-    { id: 7, title: "SIGNING OF THE DECLARATION OF INDEPENDENCE", year: 1776, category: "Modern", keyFigure: "Thomas Jefferson", clue: "The 1776 act that solidified the formation of a new sovereign nation." }
+    { id: 1, title: "FALL OF ROME", year: 476, category: "Ancient", keyFigure: "Romulus Augustulus", clue: "The fall of this major empire in 476 A.D. marked the official end of ancient dominance in the West." },
+    { id: 2, title: "MAGNA CARTA", year: 1215, category: "Medieval", keyFigure: "King John", clue: "This foundational legal document was signed in 1215 to curb the unchecked power of the monarchy." },
+    { id: 3, title: "FRENCH REVOLUTION", year: 1789, category: "Modern", keyFigure: "Louis XVI", clue: "This massive social and political upheaval ignited in 1789, eventually toppling the absolute monarchy." },
+    { id: 4, title: "MOON LANDING", year: 1969, category: "Modern", keyFigure: "Neil Armstrong", clue: "In 1969, humanity achieved a historic milestone by placing the first human beings on another celestial body." },
+    { id: 5, title: "PRINTING PRESS INVENTED", year: 1440, category: "Medieval", keyFigure: "Johannes Gutenberg", clue: "Developed around 1440, this technological breakthrough fundamentally changed how information was recorded and shared." },
+    { id: 6, title: "BATTLE OF WATERLOO", year: 1815, category: "Modern", keyFigure: "Napoleon Bonaparte", clue: "This decisive confrontation in 1815 effectively concluded a long-standing era of European imperial conquest." },
+    { id: 7, title: "DECLARATION OF INDEPENDENCE", year: 1776, category: "Modern", keyFigure: "Thomas Jefferson", clue: "The 1776 ratification of this document signaled the birth of a new sovereign nation breaking away from colonial rule." }
 ];
 
 let SECRET_EVENT = null;
@@ -27,13 +27,15 @@ function updateHintText(text) {
     if (hintElement) hintElement.innerText = text;
 }
 
+// Overhauled Clue System
 function triggerProgressiveHint() {
     guessCount++;
     const mode = IS_ENDLESS ? "Endless" : "Daily";
+    
     switch(guessCount) {
-        case 1: updateHintText(`${mode} Hint: Key historical figure: ${SECRET_EVENT.keyFigure}.`); break;
-        case 2: updateHintText(`${mode} Hint: This event took place during the ${Math.floor(SECRET_EVENT.year/100) * 100}s.`); break;
-        case 3: updateHintText(`${mode} Hint: Full context: ${SECRET_EVENT.clue}`); break;
+        case 1: updateHintText(`Hint: The primary historical figure associated with this event is ${SECRET_EVENT.keyFigure}.`); break;
+        case 2: updateHintText(`Hint: This event took place during the ${Math.floor(SECRET_EVENT.year/100) * 100}s, within the ${SECRET_EVENT.category} era.`); break;
+        case 3: updateHintText(`Final Hint: ${SECRET_EVENT.clue}`); break;
         default: break;
     }
 }
@@ -41,21 +43,22 @@ function triggerProgressiveHint() {
 function setDailyEvent() {
     IS_ENDLESS = false;
     guessCount = 0;
+    feed.innerHTML = ""; // Clear board
     const today = new Date();
     const seed = today.getUTCFullYear() * 10000 + (today.getUTCMonth() + 1) * 100 + today.getUTCDate();
     SECRET_EVENT = HISTORICAL_EVENTS[seed % HISTORICAL_EVENTS.length];
-    updateHintText(`Daily History Challenge: Guess the event! (Category: ${SECRET_EVENT.category})`);
+    updateHintText(`Daily History Challenge: Can you identify this event?`);
 }
 
 function setEndlessEvent() {
     IS_ENDLESS = true;
     guessCount = 0;
-    feed.innerHTML = "";
+    feed.innerHTML = ""; // Clear board
     SECRET_EVENT = HISTORICAL_EVENTS[Math.floor(Math.random() * HISTORICAL_EVENTS.length)];
-    updateHintText(`Endless Mode: Guess the historical event! (Category: ${SECRET_EVENT.category})`);
+    updateHintText(`Endless Mode: Identify the historical event!`);
 }
 
-// Endless Button Listener
+// Fixed Endless Button Logic
 if (endlessBtn) {
     endlessBtn.addEventListener("click", () => {
         if (!IS_ENDLESS) {
@@ -68,7 +71,6 @@ if (endlessBtn) {
     });
 }
 
-// Search Logic
 if (searchInput) {
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.toLowerCase();
@@ -112,7 +114,7 @@ function submitGuess(guessedEvent) {
 
 function createInfoBlock(text, isCorrect) {
     let block = document.createElement("div");
-    block.className = "info-block " + (isCorrect ? "correct" : "absent");
+    block.className = "info-block " + (isCorrect === true ? "correct" : "absent");
     block.innerText = text;
     return block;
 }
